@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper Trail — A Field Guide for First-Time Researchers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E6;
+    --cream-deep:#EFE7D6;
+    --ink:#26241D;
+    --green:#1E4432;
+    --green-deep:#153327;
+    --pink:#E8ABBE;
+    --pink-deep:#D98CA4;
+    --line: rgba(38,36,29,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--cream); color:var(--ink); font-family:'Inter',sans-serif; font-size:16px; line-height:1.6;}
+  h1,h2,h3,.display{font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em; margin:0;}
+  .script{font-family:'Fraunces', serif; font-style:italic; font-weight:500;}
+  .eyebrow{font-size:12px; letter-spacing:0.18em; text-transform:uppercase; font-weight:600; color:var(--green);}
+  a{color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+
+  .scrollbar{position:fixed; top:0; left:0; height:3px; background:var(--pink-deep); z-index:100; width:0%; transition:width .1s linear;}
+
+  .stripes{height:14px; width:100%; background: repeating-linear-gradient(90deg, var(--green) 0 22px, var(--cream) 22px 30px, var(--pink) 30px 52px, var(--cream) 52px 60px);}
+
+  header{padding:22px 0; border-bottom:1px solid var(--line); background:var(--cream); position:sticky; top:0; z-index:10;}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between;}
+  .wordmark{font-size:20px; letter-spacing:0.02em;}
+  nav ul{list-style:none; display:flex; gap:28px; margin:0; padding:0;}
+  nav a{text-decoration:none; font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; color:var(--ink); opacity:0.75; transition:opacity .15s ease; border-bottom:2px solid transparent; padding-bottom:2px;}
+  nav a:hover{opacity:1;}
+  nav a.active{opacity:1; color:var(--green-deep); border-bottom-color:var(--pink-deep);}
+
+  .hero{padding:90px 0 76px; text-align:center;}
+  .hero .script{font-size:20px; display:block; margin-bottom:18px; color:var(--green-deep);}
+  .hero h1{font-size:clamp(40px, 7vw, 76px); text-transform:uppercase; line-height:0.98;}
+  .hero p.lede{max-width:560px; margin:26px auto 0; font-size:17px; color:rgba(38,36,29,0.78);}
+  .cta-row{margin-top:36px;}
+  .btn{display:inline-block; background:var(--green); color:var(--cream); padding:14px 30px; border-radius:999px; text-decoration:none; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; border:none; cursor:pointer; transition:transform .15s ease, background .15s ease;}
+  .btn:hover{background:var(--green-deep); transform:translateY(-1px);}
+
+  .marquee-band{background:var(--green); color:var(--cream); overflow:hidden; white-space:nowrap; padding:10px 0;}
+  .marquee-track{display:inline-block; padding-left:100%; animation:scroll 34s linear infinite; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600;}
+  @keyframes scroll{0%{transform:translateX(0);} 100%{transform:translateX(-100%);}}
+
+  .intro{padding:96px 0;}
+  .intro-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:70px; align-items:center;}
+  .intro h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; line-height:1.08; max-width:420px;}
+  .intro p{margin-top:22px; max-width:440px; color:rgba(38,36,29,0.82);}
+  .intro p + p{margin-top:14px;}
+
+  .paper-card{position:relative; background:var(--cream-deep); border:1px solid var(--line); padding:30px 30px 26px; max-width:400px; margin-left:auto; box-shadow:0 20px 46px rgba(30,68,50,0.12);
+    -webkit-mask-image: radial-gradient(circle at 10px 0, transparent 9px, black 9.5px); -webkit-mask-size: 20px 100%; -webkit-mask-position: top left; -webkit-mask-repeat: repeat-x;}
+  .paper-card::before{content:""; position:absolute; inset:0; border:1px solid var(--line); pointer-events:none;}
+  .paper-card .tag{font-size:11px; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; color:var(--pink-deep); margin-bottom:14px; display:block;}
+  .paper-card h4{font-family:'Fraunces',serif; font-weight:600; font-size:19px; margin:0 0 16px;}
+  .idx-line{display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px dotted var(--line); cursor:default;}
+  .idx-line span:first-child{font-family:'Fraunces',serif; font-style:italic;}
+  .idx-line span:last-child{color:rgba(38,36,29,0.5); font-size:12px;}
+
+  /* Parts of a paper — flip cards */
+  .parts{padding:100px 0; background:var(--cream-deep);}
+  .parts .head{text-align:center; margin-bottom:16px;}
+  .parts h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+  .parts .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .parts .hint{text-align:center; font-size:12.5px; color:rgba(38,36,29,0.55); margin-bottom:50px;}
+  .flip-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;}
+  .flip-card{background:transparent; perspective:1000px; height:150px; cursor:pointer;}
+  .flip-inner{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-front, .flip-back{position:absolute; inset:0; backface-visibility:hidden; border:1px solid var(--line); padding:18px; display:flex; flex-direction:column; justify-content:center;}
+  .flip-front{background:var(--cream);}
+  .flip-front .fnum{font-family:'Fraunces',serif; font-style:italic; font-size:12px; color:var(--pink-deep); margin-bottom:8px;}
+  .flip-front h4{font-size:17px; font-family:'Fraunces',serif; font-weight:600;}
+  .flip-front .tap{font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(38,36,29,0.4); margin-top:10px;}
+  .flip-back{background:var(--green); color:var(--cream); transform:rotateY(180deg); font-size:12.5px;}
+
+  .framework{background:var(--green); color:var(--cream); padding:100px 0 90px; position:relative;}
+  .framework .head{text-align:center; margin-bottom:40px;}
+  .framework .head .script{font-size:19px; opacity:0.85; display:block; margin-bottom:6px;}
+  .framework .head h2{font-size:clamp(30px,4vw,44px); text-transform:uppercase;}
+  .progress-wrap{max-width:420px; margin:0 auto 54px; text-align:center;}
+  .progress-label{font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,241,230,0.75); margin-bottom:10px; font-weight:600;}
+  .progress-track{height:6px; background:rgba(246,241,230,0.18); border-radius:99px; overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:var(--pink); border-radius:99px; transition:width .35s ease;}
+  .steps{display:grid; grid-template-columns:repeat(2, 1fr); gap:1px; background:rgba(246,241,230,0.16); border:1px solid rgba(246,241,230,0.16);}
+  .step{background:var(--green); padding:32px 30px; cursor:pointer; transition:background .15s ease;}
+  .step:hover{background:var(--green-deep);}
+  .step-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .step .num{font-family:'Fraunces',serif; font-size:14px; color:var(--pink); letter-spacing:0.06em;}
+  .step-check{width:20px; height:20px; border-radius:50%; border:1.5px solid rgba(246,241,230,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s ease;}
+  .step-check svg{opacity:0; transform:scale(0.6); transition:all .15s ease;}
+  .step.done .step-check{background:var(--pink); border-color:var(--pink);}
+  .step.done .step-check svg{opacity:1; transform:scale(1);}
+  .step.done h3, .step.done p{opacity:0.5; text-decoration:line-through; text-decoration-color:rgba(246,241,230,0.4);}
+  .step h3{font-size:19px; margin-bottom:9px; font-weight:600;}
+  .step p{font-size:14.5px; color:rgba(246,241,230,0.82); margin:0;}
+
+  .mistakes{background:repeating-linear-gradient(90deg, var(--pink) 0 34px, var(--cream) 34px 68px); padding:100px 0;}
+  .mistakes .head{text-align:center; margin-bottom:54px;}
+  .mistakes .head h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+  .mistakes .head .script{font-size:18px; color:var(--green-deep); display:block; margin-bottom:6px;}
+  .mistakes .head .hint{font-size:12.5px; color:rgba(38,36,29,0.55); margin-top:10px;}
+  .card-row{display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;}
+  .mcard{background:var(--cream); border:1px solid var(--line); padding:26px 22px; text-align:left; cursor:pointer;}
+  .mcard .x{font-family:'Fraunces',serif; font-style:italic; font-size:26px; color:var(--pink-deep); margin-bottom:12px; display:block;}
+  .mcard h4{font-size:15.5px; margin-bottom:8px; font-family:'Fraunces',serif; font-weight:600;}
+  .mcard p{font-size:13.5px; color:rgba(38,36,29,0.75); margin:0;}
+  .mcard .fix{max-height:0; overflow:hidden; transition:max-height .3s ease, margin-top .3s ease; margin-top:0;}
+  .mcard.open .fix{max-height:160px; margin-top:14px;}
+  .mcard .fix-inner{border-top:1px dashed var(--line); padding-top:12px; font-size:13px; color:var(--green-deep);}
+  .mcard .toggle-hint{font-size:11px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700; color:var(--pink-deep); margin-top:14px; display:inline-block;}
+
+  .template{padding:100px 0;}
+  .template-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:start;}
+  .template h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; max-width:380px; line-height:1.1;}
+  .template p{margin-top:20px; max-width:400px; color:rgba(38,36,29,0.8);}
+  .checklist{background:var(--cream-deep); border:1px solid var(--line); padding:8px 0;}
+  .cl-item{padding:20px 30px; border-bottom:1px solid var(--line);}
+  .cl-item:last-child{border-bottom:none;}
+  .row-top{display:flex; align-items:baseline; gap:16px;}
+  .cl-item .n{font-family:'Fraunces',serif; font-size:14px; color:var(--pink-deep); min-width:20px;}
+  .cl-item div h5{margin:0 0 4px; font-size:15.5px; font-family:'Fraunces',serif; font-weight:600;}
+  .cl-item div p{margin:0 0 10px; font-size:13.5px; color:rgba(38,36,29,0.72);}
+  .cl-item textarea{width:100%; resize:vertical; min-height:50px; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); background:var(--cream); border:1px solid var(--line); border-radius:4px; padding:10px 12px;}
+  .cl-item textarea:focus{outline:2px solid var(--green); outline-offset:1px;}
+  .copy-row{padding:22px 30px 26px; display:flex; align-items:center; flex-wrap:wrap; gap:6px;}
+  .copy-btn{background:var(--green); color:var(--cream); border:none; padding:12px 22px; border-radius:999px; font-size:12.5px; letter-spacing:0.07em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .copy-btn:hover{background:var(--green-deep);}
+  .copy-note{font-size:12px; margin-left:6px; color:rgba(38,36,29,0.6);}
+
+  .resources{background:var(--cream-deep); padding:96px 0;}
+  .resources .head{text-align:center; margin-bottom:50px;}
+  .resources h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+  .resources .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .res-list{max-width:720px; margin:0 auto;}
+  .res-item{display:flex; justify-content:space-between; align-items:baseline; padding:20px 0; border-bottom:1px solid var(--line); gap:20px;}
+  .res-item h5{font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0 0 4px;}
+  .res-item p{margin:0; font-size:13.5px; color:rgba(38,36,29,0.72);}
+  .res-item .tag2{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; font-weight:700; color:var(--green-deep); white-space:nowrap; padding-top:2px;}
+
+  /* citation picker */
+  .cite-picker{max-width:720px; margin:0 auto 56px; background:var(--cream); border:1px solid var(--line); padding:26px 30px;}
+  .cite-picker .cp-label{font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; color:var(--green-deep); margin-bottom:14px;}
+  .cp-btns{display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;}
+  .cp-btn{border:1px solid var(--green); background:transparent; color:var(--green-deep); padding:8px 18px; border-radius:999px; font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; cursor:pointer; transition:all .15s ease;}
+  .cp-btn.active{background:var(--green); color:var(--cream);}
+  .cp-example{background:var(--cream-deep); border:1px dashed var(--line); padding:16px 18px; font-size:13.5px; font-family:'Fraunces',serif; font-style:italic; color:var(--ink);}
+  .cp-note{font-size:12.5px; color:rgba(38,36,29,0.65); margin-top:12px;}
+
+  .about{padding:100px 0 110px;}
+  .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
+  .about h2{font-size:clamp(26px,3.4vw,36px); text-transform:uppercase; line-height:1.12;}
+  .about p{margin-top:18px; color:rgba(38,36,29,0.82); max-width:480px;}
+  .about p + p{margin-top:12px;}
+  .about-mark{font-family:'Fraunces',serif; font-style:italic; font-size:56px; color:var(--pink-deep); line-height:1;}
+
+  footer{background:var(--green-deep); color:var(--cream); text-align:center; padding:44px 0 30px;}
+  footer .foot-note{font-size:12px; letter-spacing:0.06em; opacity:0.6; margin-top:6px;}
+  footer .signed{font-family:'Fraunces',serif; font-style:italic; font-size:15px; opacity:0.85;}
+
+  @media (max-width: 860px){
+    .intro-grid, .template-grid, .about-grid{grid-template-columns:1fr; gap:40px;}
+    .paper-card{margin:0 auto;}
+    .steps{grid-template-columns:1fr;}
+    .card-row, .flip-grid{grid-template-columns:1fr 1fr;}
+    nav ul{display:none;}
+  }
+  @media (max-width:520px){
+    .card-row, .flip-grid{grid-template-columns:1fr;}
+    .wrap{padding:0 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="scrollbar" id="scrollbar"></div>
+
+<header>
+  <div class="wrap nav-inner">
+    <div class="wordmark display">Paper Trail</div>
+    <nav>
+      <ul>
+        <li><a href="#parts" data-nav>Parts</a></li>
+        <li><a href="#framework" data-nav>Framework</a></li>
+        <li><a href="#mistakes" data-nav>Mistakes</a></li>
+        <li><a href="#template" data-nav>Template</a></li>
+        <li><a href="#resources" data-nav>Resources</a></li>
+        <li><a href="#about" data-nav>About</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="stripes"></div>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="script">for the curious, the confused, and the first-time researcher</span>
+    <h1>Write your first<br>real research paper</h1>
+    <p class="lede">A step-by-step field guide to picking a topic, researching it properly, building your index, and citing it right — for any subject, built by someone doing this for the first time herself.</p>
+    <div class="cta-row"><a class="btn" href="#parts">Start the guide</a></div>
+  </div>
+</section>
+
+<div class="marquee-band">
+  <div class="marquee-track">PAPER TRAIL &nbsp;·&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;·&nbsp; ONE TOPIC, DONE PROPERLY &nbsp;·&nbsp; PAPER TRAIL &nbsp;·&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;·&nbsp; ONE TOPIC, DONE PROPERLY &nbsp;·&nbsp;</div>
+</div>
+
+<section class="intro">
+  <div class="wrap intro-grid">
+    <div>
+      <span class="eyebrow">Why this exists</span>
+      <h2>Nobody ever actually teaches you how to do this part.</h2>
+      <p>Research papers get assigned constantly, but rarely explained — how to pick a topic, find sources worth using, structure the thing, and cite it properly along the way.</p>
+      <p>This is that missing process. The exact sequence that turns "I have to write a research paper" into a finished one you're not embarrassed to hand in — no matter the subject.</p>
+    </div>
+    <div class="paper-card">
+      <span class="tag">What you'll build</span>
+      <h4>Your Index</h4>
+      <div class="idx-line"><span>Abstract</span><span>pg. 1</span></div>
+      <div class="idx-line"><span>I. Introduction</span><span>pg. 2</span></div>
+      <div class="idx-line"><span>II. Body — Section One</span><span>pg. 3</span></div>
+      <div class="idx-line"><span>III. Body — Section Two</span><span>pg. 5</span></div>
+      <div class="idx-line"><span>IV. Conclusion</span><span>pg. 7</span></div>
+      <div class="idx-line" style="border-bottom:none;"><span>References</span><span>pg. 8</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="parts" id="parts">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">the words every paper uses</span>
+      <h2>Know Every Part</h2>
+    </div>
+    <div class="hint">Tap a card to flip it.</div>
+    <div class="flip-grid" id="flipGrid">
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">01</span><h4>Title</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">Short and specific enough that someone could guess your argument just from reading it — not just your general subject.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">02</span><h4>Abstract</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">A 150–250 word summary of the whole paper — your question, how you looked into it, what you found. Written last, read first.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">03</span><h4>Introduction</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">States your research question, why it matters, and where the paper is headed. The reader's first real orientation.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">04</span><h4>Literature Review</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">What others have already said about your topic — not a list of sources, but a short story of the existing conversation.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">05</span><h4>Methodology</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">Simply: how you looked into your question. Which sources, and what kind of research — reading and comparing, or something more hands-on.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">06</span><h4>Body / Results</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">What you actually found, laid out clearly — facts and evidence first, your opinion saved for the next part.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">07</span><h4>Conclusion</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">What it all means, stated plainly — no new information here, just your honest answer to the question you started with.</div>
+      </div></div>
+      <div class="flip-card"><div class="flip-inner">
+        <div class="flip-front"><span class="fnum">08</span><h4>References</h4><span class="tap">Tap to flip</span></div>
+        <div class="flip-back">Every source you used, listed in one consistent citation style — this is what keeps your paper honest and traceable.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="framework" id="framework">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">the sequence, in order</span>
+      <h2>The Framework</h2>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="progressText">0 of 7 done</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="steps" id="stepsGrid">
+      <div class="step" data-step="1"><div class="step-top"><span class="num">01</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Pick a topic you actually care about</h3><p>Not the first suggestion off a Google search. If you're not a little curious about it, the next three weeks will feel twice as long.</p></div>
+      <div class="step" data-step="2"><div class="step-top"><span class="num">02</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Turn it into one real question</h3><p>A topic is not a thesis. "Climate change" isn't a paper — "why did this policy fail to reduce emissions" is.</p></div>
+      <div class="step" data-step="3"><div class="step-top"><span class="num">03</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Find real sources, not just top results</h3><p>Google Scholar, your library's databases, and JSTOR exist for a reason — the first page of a normal search is rarely where the good sources live.</p></div>
+      <div class="step" data-step="4"><div class="step-top"><span class="num">04</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Take notes by section, not by source</h3><p>Organize what you find under the parts of your outline as you go. Writing becomes assembly instead of a second research phase.</p></div>
+      <div class="step" data-step="5"><div class="step-top"><span class="num">05</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Build your index before you write</h3><p>Title, abstract, introduction, body sections, conclusion, references. Decide the shape before you fill it in.</p></div>
+      <div class="step" data-step="6"><div class="step-top"><span class="num">06</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Cite as you go, not at the end</h3><p>Save the source info the moment you use a fact. Rebuilding citations from memory later is how plagiarism happens by accident.</p></div>
+      <div class="step" data-step="7"><div class="step-top"><span class="num">07</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+        <h3>Write the abstract last</h3><p>You can't summarize a paper you haven't finished. Write it once everything else is done, even though it's read first.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="mistakes" id="mistakes">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">read this before you start writing</span>
+      <h2>Four ways first papers go wrong</h2>
+      <div class="hint">Tap a card to see the fix.</div>
+    </div>
+    <div class="card-row" id="mcardRow">
+      <div class="mcard" data-fix="Use Wikipedia to find its cited sources at the bottom of the page — then go read and cite those instead.">
+        <span class="x">01</span><h4>Stopping at Wikipedia</h4><p>Fine as a map to find real sources. Never fine as the only source you cite.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="Write your index first, even a rough one. Filling in labeled boxes is easier than facing one blank page.">
+        <span class="x">02</span><h4>Writing without an outline</h4><p>Starting to type before you know your structure is how papers end up circling the same point three times.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="Keep a running source list as you research. Add the source the second you use a fact from it, not after the paper is done.">
+        <span class="x">03</span><h4>Citing from memory later</h4><p>Trying to reconstruct where every fact came from after the paper is written is where accidental plagiarism starts.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="Rewrite your topic as a question. If you can't answer it in one sentence yet, it's still a topic, not a thesis.">
+        <span class="x">04</span><h4>Topic mistaken for a thesis</h4><p>"Social media and teenagers" is a subject. It isn't an argument yet, and a paper needs one.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="template" id="template">
+  <div class="wrap template-grid">
+    <div>
+      <span class="eyebrow">Build it here</span>
+      <h2>Fill in your index, section by section.</h2>
+      <p>Type a few words in each box — your actual topic, sources, and argument. Nothing is saved anywhere; it only lives in this page until you copy it out.</p>
+    </div>
+    <div class="checklist">
+      <div class="cl-item"><div class="row-top"><span class="n">01</span><div style="flex:1;"><h5>Title & research question</h5><p>Your topic, phrased as the one question your paper will answer.</p></div></div>
+        <textarea id="f1" placeholder="e.g. Why did [policy] fail to achieve its stated goal?"></textarea></div>
+      <div class="cl-item"><div class="row-top"><span class="n">02</span><div style="flex:1;"><h5>Abstract (write this last)</h5><p>One-paragraph summary of your question, approach, and finding.</p></div></div>
+        <textarea id="f2" placeholder="Summarize the whole paper in a few sentences."></textarea></div>
+      <div class="cl-item"><div class="row-top"><span class="n">03</span><div style="flex:1;"><h5>Introduction</h5><p>The question, and why it matters, and where the paper is headed.</p></div></div>
+        <textarea id="f3" placeholder="What you're arguing, and why it matters."></textarea></div>
+      <div class="cl-item"><div class="row-top"><span class="n">04</span><div style="flex:1;"><h5>Body sections</h5><p>List your 2–3 sub-topics — each becomes one section.</p></div></div>
+        <textarea id="f4" placeholder="Section 1: ...&#10;Section 2: ...&#10;Section 3: ..."></textarea></div>
+      <div class="cl-item"><div class="row-top"><span class="n">05</span><div style="flex:1;"><h5>Conclusion</h5><p>What you found, in one honest sentence.</p></div></div>
+        <textarea id="f5" placeholder="What your research actually showed."></textarea></div>
+      <div class="cl-item"><div class="row-top"><span class="n">06</span><div style="flex:1;"><h5>References (running list)</h5><p>Add a source the moment you use it — don't wait.</p></div></div>
+        <textarea id="f6" placeholder="Author, Title, Publication, Year..."></textarea></div>
+      <div class="copy-row"><button class="copy-btn" onclick="copyTemplate()">Copy my outline</button><span class="copy-note" id="copyNote"></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="resources" id="resources">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">where to actually look</span>
+      <h2>Free places to start</h2>
+    </div>
+
+    <div class="cite-picker">
+      <div class="cp-label">Which citation style fits your paper?</div>
+      <div class="cp-btns" id="cpBtns">
+        <button class="cp-btn active" data-style="apa">APA</button>
+        <button class="cp-btn" data-style="mla">MLA</button>
+        <button class="cp-btn" data-style="chicago">Chicago</button>
+      </div>
+      <div class="cp-example" id="cpExample">Smith, J. (2024). Title of the source. Publisher.</div>
+      <div class="cp-note" id="cpNote">Most common in social sciences and psychology — used for in-text citations like (Smith, 2024).</div>
+    </div>
+
+    <div class="res-list">
+      <div class="res-item"><div><h5>Google Scholar</h5><p>Free search engine for academic papers, articles, and citations — a real step up from a normal search.</p></div><span class="tag2">Sources</span></div>
+      <div class="res-item"><div><h5>Purdue OWL</h5><p>Free, the standard reference for MLA and APA citation formatting — when in doubt, this settles it.</p></div><span class="tag2">Formatting</span></div>
+      <div class="res-item"><div><h5>Your school or local library's databases</h5><p>Often free access to JSTOR or EBSCO through your student login — ask a librarian if you're not sure.</p></div><span class="tag2">Sources</span></div>
+      <div class="res-item"><div><h5>Zotero</h5><p>Free tool that collects sources as you browse and formats your citations automatically.</p></div><span class="tag2">Citations</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-mark">"</div>
+    <div>
+      <span class="eyebrow">About this guide</span>
+      <h2>Written by someone figuring this out for the first time too</h2>
+      <p>I'm Bhavya, a high schooler. Nobody assigned me a research paper — I just got curious one day and wanted to write a proper one, on my own terms.</p>
+      <p>The problem was I had no idea where to start. I opened a blank doc, read the word "abstract," closed it, and left the whole thing alone for months because it all sounded like a language for people who already knew what they were doing.</p>
+      <p>This guide is the process I eventually figured out for myself, written down so the next curious person doesn't lose months to the same confusion.</p>
+    </div>
+  </div>
+</section>
+
+<div class="stripes"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="signed">By Bhavya Tiwari</div>
+    <div class="foot-note">Paper Trail — a field guide for first-time researchers</div>
+  </div>
+</footer>
+
+<script>
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('scrollbar').style.width = pct + '%';
+});
+
+// Step checkboxes + progress bar
+const steps = document.querySelectorAll('.step');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+function updateProgress(){
+  const done = document.querySelectorAll('.step.done').length;
+  progressFill.style.width = (done/steps.length*100) + '%';
+  progressText.textContent = done + ' of ' + steps.length + ' done';
+}
+steps.forEach(s => { s.addEventListener('click', () => { s.classList.toggle('done'); updateProgress(); }); });
+
+// Mistake cards expand
+document.querySelectorAll('.mcard').forEach(card => {
+  card.addEventListener('click', () => {
+    const wasOpen = card.classList.contains('open');
+    document.querySelectorAll('.mcard').forEach(c => c.classList.remove('open'));
+    if(!wasOpen){ card.classList.add('open'); card.querySelector('.fix-text').textContent = card.getAttribute('data-fix'); }
+  });
+});
+
+// Flip cards
+document.querySelectorAll('.flip-card').forEach(card => {
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+});
+
+// Citation style picker
+const cpData = {
+  apa: { example: "Smith, J. (2024). Title of the source. Publisher.", note: "Most common in social sciences and psychology — used for in-text citations like (Smith, 2024)." },
+  mla: { example: 'Smith, John. "Title of the Source." Publisher, 2024.', note: "Most common in humanities and literature — used for in-text citations like (Smith 45)." },
+  chicago: { example: "Smith, John. Title of the Source. City: Publisher, 2024.", note: "Common in history and some sciences — offers footnote-style or author-date citations depending on your teacher's preference." }
+};
+document.querySelectorAll('.cp-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cp-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = cpData[btn.getAttribute('data-style')];
+    document.getElementById('cpExample').textContent = d.example;
+    document.getElementById('cpNote').textContent = d.note;
+  });
+});
+
+// Outline builder copy
+function copyTemplate(){
+  const v = id => document.getElementById(id).value.trim();
+  const parts = [
+    "TITLE / RESEARCH QUESTION\n" + (v('f1') || "[not filled in yet]"),
+    "\nABSTRACT\n" + (v('f2') || "[not filled in yet]"),
+    "\nI. INTRODUCTION\n" + (v('f3') || "[not filled in yet]"),
+    "\nII. BODY SECTIONS\n" + (v('f4') || "[not filled in yet]"),
+    "\nIII. CONCLUSION\n" + (v('f5') || "[not filled in yet]"),
+    "\nREFERENCES\n" + (v('f6') || "[not filled in yet]")
+  ];
+  const text = parts.join("\n");
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copyNote').textContent = "Copied — paste it into your doc.";
+  }).catch(() => {
+    document.getElementById('copyNote').textContent = "Couldn't copy automatically — select the boxes manually.";
+  });
+}
+
+// Scroll-spy nav
+const navLinks = document.querySelectorAll('[data-nav]');
+const sections = ['parts','framework','mistakes','template','resources','about'].map(id => document.getElementById(id));
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      navLinks.forEach(l => l.classList.remove('active'));
+      const match = document.querySelector('[href="#' + entry.target.id + '"]');
+      if(match) match.classList.add('active');
+    }
+  });
+}, { rootMargin: '-40% 0px -50% 0px' });
+sections.forEach(s => { if(s) spy.observe(s); });
+</script>
+
+</body>
+</html>
