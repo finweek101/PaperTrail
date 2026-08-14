@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paper Trail — A Field Guide for First-Time Researchers</title>
+<title>Paper Trail: A Field Guide for First-Time Researchers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,17 +25,29 @@
   .script{font-family:'Fraunces', serif; font-style:italic; font-weight:500;}
   .eyebrow{font-size:12px; letter-spacing:0.18em; text-transform:uppercase; font-weight:600; color:var(--green);}
   a{color:inherit;}
-  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px; position:relative;}
 
   .scrollbar{position:fixed; top:0; left:0; height:3px; background:var(--pink-deep); z-index:100; width:0%; transition:width .1s linear;}
 
   .stripes{height:14px; width:100%; background: repeating-linear-gradient(90deg, var(--green) 0 22px, var(--cream) 22px 30px, var(--pink) 30px 52px, var(--cream) 52px 60px);}
 
+  /* ---------- subtle moving background trail ---------- */
+  .bg-trail{position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;}
+  .bg-trail svg{width:100%; height:100%; display:block; animation: trailDrift 100s ease-in-out infinite alternate;}
+  .trail-path{fill:none; stroke:var(--green); stroke-width:2; opacity:0.06; stroke-dasharray:2 16; stroke-linecap:round; animation: trailDash 46s linear infinite;}
+  .trail-path.alt{stroke:var(--pink-deep); opacity:0.05; stroke-dasharray:1 20; animation-duration:60s; animation-direction:reverse;}
+  .trail-dot{fill:var(--pink-deep); opacity:0.14;}
+  @keyframes trailDrift{0%{transform:translateY(0) scale(1);} 100%{transform:translateY(-60px) scale(1.03);}}
+  @keyframes trailDash{to{stroke-dashoffset:-500;}}
+  @media (prefers-reduced-motion: reduce){
+    .bg-trail svg, .trail-path{animation:none;}
+  }
+
   header{padding:22px 0; border-bottom:1px solid var(--line); background:var(--cream); position:sticky; top:0; z-index:10;}
   .nav-inner{display:flex; align-items:center; justify-content:space-between;}
   .wordmark{font-size:20px; letter-spacing:0.02em;}
-  nav ul{list-style:none; display:flex; gap:28px; margin:0; padding:0;}
-  nav a{text-decoration:none; font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; color:var(--ink); opacity:0.75; transition:opacity .15s ease; border-bottom:2px solid transparent; padding-bottom:2px;}
+  nav ul{list-style:none; display:flex; gap:18px; margin:0; padding:0;}
+  nav a{text-decoration:none; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600; color:var(--ink); opacity:0.75; transition:opacity .15s ease; border-bottom:2px solid transparent; padding-bottom:2px; white-space:nowrap;}
   nav a:hover{opacity:1;}
   nav a.active{opacity:1; color:var(--green-deep); border-bottom-color:var(--pink-deep);}
 
@@ -43,9 +55,11 @@
   .hero .script{font-size:20px; display:block; margin-bottom:18px; color:var(--green-deep);}
   .hero h1{font-size:clamp(40px, 7vw, 76px); text-transform:uppercase; line-height:0.98;}
   .hero p.lede{max-width:560px; margin:26px auto 0; font-size:17px; color:rgba(38,36,29,0.78);}
-  .cta-row{margin-top:36px;}
+  .cta-row{margin-top:36px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
   .btn{display:inline-block; background:var(--green); color:var(--cream); padding:14px 30px; border-radius:999px; text-decoration:none; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; border:none; cursor:pointer; transition:transform .15s ease, background .15s ease;}
   .btn:hover{background:var(--green-deep); transform:translateY(-1px);}
+  .btn.ghost{background:transparent; color:var(--green-deep); border:1.5px solid var(--green);}
+  .btn.ghost:hover{background:var(--green); color:var(--cream);}
 
   .marquee-band{background:var(--green); color:var(--cream); overflow:hidden; white-space:nowrap; padding:10px 0;}
   .marquee-track{display:inline-block; padding-left:100%; animation:scroll 34s linear infinite; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600;}
@@ -66,7 +80,73 @@
   .idx-line span:first-child{font-family:'Fraunces',serif; font-style:italic;}
   .idx-line span:last-child{color:rgba(38,36,29,0.5); font-size:12px;}
 
-  /* Parts of a paper — flip cards */
+  /* ---------- generic accordion (reused across why / start / explore / faq) ---------- */
+  .acc-list{max-width:760px; margin:0 auto;}
+  .acc-item{border-bottom:1px solid var(--line); padding:18px 2px; cursor:pointer;}
+  .acc-item:last-child{border-bottom:none;}
+  .acc-item .acc-q{display:flex; justify-content:space-between; align-items:center; gap:16px; font-family:'Fraunces',serif; font-weight:600; font-size:16.5px;}
+  .acc-item .acc-q .plus{font-size:20px; color:var(--pink-deep); transition:transform .2s ease; font-family:'Inter',sans-serif; font-weight:400; flex-shrink:0;}
+  .acc-item.open .acc-q .plus{transform:rotate(45deg);}
+  .acc-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .acc-item.open .acc-a{max-height:260px;}
+  .acc-a p{padding-top:10px; font-size:13.5px; color:rgba(38,36,29,0.78); margin:0; max-width:640px;}
+  .acc-list.on-dark .acc-item{border-bottom-color:rgba(246,241,230,0.2);}
+  .acc-list.on-dark .acc-q{color:var(--cream);}
+  .acc-list.on-dark .acc-a p{color:rgba(246,241,230,0.82);}
+
+  /* ---------- why section ---------- */
+  .why-sec{padding:100px 0;}
+  .why-sec .head{max-width:640px; margin:0 auto 50px; text-align:center;}
+  .why-sec .head .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .why-sec .head h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+  .why-sec .head p{margin-top:18px; font-size:14.5px; color:rgba(38,36,29,0.78);}
+
+  /* ---------- start section (not too young) ---------- */
+  .start-sec{background:var(--green); color:var(--cream); padding:100px 0;}
+  .start-sec .head{text-align:center; max-width:700px; margin:0 auto 46px;}
+  .start-sec .head .script{font-size:18px; opacity:0.85; display:block; margin-bottom:8px;}
+  .start-sec h2{font-size:clamp(34px,5.4vw,58px); text-transform:uppercase; line-height:1.02;}
+  .start-sec .head p{margin-top:22px; font-size:14.5px; color:rgba(246,241,230,0.85); max-width:560px; margin-left:auto; margin-right:auto;}
+  .reason-row{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1000px; margin:0 auto 46px;}
+  .reason-card{background:rgba(246,241,230,0.06); border:1px solid rgba(246,241,230,0.18); padding:26px 22px;}
+  .reason-card .rnum{font-family:'Fraunces',serif; font-style:italic; font-size:13px; color:var(--pink); margin-bottom:10px; display:block;}
+  .reason-card h4{font-family:'Fraunces',serif; font-size:16.5px; margin-bottom:10px; font-weight:600;}
+  .reason-card p{font-size:13.5px; color:rgba(246,241,230,0.82); margin:0;}
+  .admissions-box{max-width:640px; margin:0 auto; background:var(--cream); color:var(--ink); padding:8px 26px; border:1px solid var(--line);}
+  .admissions-box .acc-item{padding:18px 2px;}
+
+  /* ---------- explore section ---------- */
+  .explore-sec{background:var(--cream-deep); padding:100px 0;}
+  .explore-sec .head{text-align:center; margin-bottom:44px; max-width:680px; margin-left:auto; margin-right:auto;}
+  .explore-sec .head .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .explore-sec .head h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+  .explore-sec .head p{margin-top:16px; font-size:14.5px; color:rgba(38,36,29,0.78);}
+  .subhead{text-align:center; font-family:'Fraunces',serif; font-style:italic; font-size:15px; color:var(--green-deep); margin:0 0 20px;}
+  .trail-stages{display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:22px;}
+  .trail-btn{border:1px solid var(--green); background:transparent; color:var(--green-deep); padding:9px 18px; border-radius:999px; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .trail-btn.active{background:var(--green); color:var(--cream);}
+  .trail-panel{max-width:640px; margin:0 auto 64px; background:var(--cream); border:1px solid var(--line); padding:28px 30px; text-align:center;}
+  .trail-panel .tp-line{font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--green-deep); margin-bottom:10px;}
+  .trail-panel p{margin:0; font-size:13.5px; color:rgba(38,36,29,0.78);}
+
+  .activity-tabs{max-width:760px; margin:0 auto; background:var(--cream); border:1px solid var(--line); padding:28px 30px;}
+  .act-tab-btns{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
+  .act-tab-btns button{border:1px solid var(--green); background:transparent; color:var(--green-deep); padding:8px 16px; border-radius:999px; font-size:11px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .act-tab-btns button.active{background:var(--green); color:var(--cream);}
+  .act-panel{display:none;}
+  .act-panel.tab-active{display:block;}
+  .tab-intro{font-size:13px; color:rgba(38,36,29,0.7); margin:0 0 16px;}
+
+  .quiz-card{background:var(--cream-deep); border:1px dashed var(--line); padding:20px 22px;}
+  .quiz-card .qtext{font-family:'Fraunces',serif; font-style:italic; font-size:15.5px; margin-bottom:16px;}
+  .quiz-btns{display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+  .quiz-btns button{flex:1; min-width:120px; border:1px solid var(--green); background:transparent; padding:9px; border-radius:6px; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:600; color:var(--green-deep); cursor:pointer;}
+  .quiz-btns button.correct{background:var(--green); color:var(--cream);}
+  .quiz-btns button.wrong{background:var(--pink); color:var(--green-deep);}
+  .quiz-feedback{font-size:13px; color:var(--green-deep); min-height:18px;}
+  .quiz-next{margin-top:10px; background:none; border:none; text-decoration:underline; font-size:12px; cursor:pointer; color:var(--green-deep); padding:0; display:none;}
+
+  /* Parts of a paper flip cards */
   .parts{padding:100px 0; background:var(--cream-deep);}
   .parts .head{text-align:center; margin-bottom:16px;}
   .parts h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
@@ -105,11 +185,14 @@
   .step p{font-size:14.5px; color:rgba(246,241,230,0.82); margin:0;}
 
   .mistakes{background:repeating-linear-gradient(90deg, var(--pink) 0 34px, var(--cream) 34px 68px); padding:100px 0;}
-  .mistakes .head{text-align:center; margin-bottom:54px;}
+  .mistakes .head{text-align:center; margin-bottom:20px;}
   .mistakes .head h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
   .mistakes .head .script{font-size:18px; color:var(--green-deep); display:block; margin-bottom:6px;}
   .mistakes .head .hint{font-size:12.5px; color:rgba(38,36,29,0.55); margin-top:10px;}
+  .mistakes .lead-note{max-width:640px; margin:0 auto 40px; text-align:center; font-size:13.5px; color:rgba(38,36,29,0.75); background:var(--cream); border:1px solid var(--line); padding:18px 24px;}
   .card-row{display:grid; grid-template-columns:repeat(4, 1fr); gap:22px;}
+  .more-mistakes{display:none; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:22px;}
+  .more-mistakes.show{display:grid;}
   .mcard{background:var(--cream); border:1px solid var(--line); padding:26px 22px; text-align:left; cursor:pointer;}
   .mcard .x{font-family:'Fraunces',serif; font-style:italic; font-size:26px; color:var(--pink-deep); margin-bottom:12px; display:block;}
   .mcard h4{font-size:15.5px; margin-bottom:8px; font-family:'Fraunces',serif; font-weight:600;}
@@ -118,6 +201,8 @@
   .mcard.open .fix{max-height:160px; margin-top:14px;}
   .mcard .fix-inner{border-top:1px dashed var(--line); padding-top:12px; font-size:13px; color:var(--green-deep);}
   .mcard .toggle-hint{font-size:11px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700; color:var(--pink-deep); margin-top:14px; display:inline-block;}
+  .show-more-btn{display:block; margin:34px auto 0; background:none; border:1px solid var(--green); color:var(--green-deep); padding:10px 24px; border-radius:999px; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .show-more-btn:hover{background:var(--green); color:var(--cream);}
 
   .template{padding:100px 0;}
   .template-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:start;}
@@ -138,9 +223,10 @@
   .copy-note{font-size:12px; margin-left:6px; color:rgba(38,36,29,0.6);}
 
   .resources{background:var(--cream-deep); padding:96px 0;}
-  .resources .head{text-align:center; margin-bottom:50px;}
+  .resources .head{text-align:center; margin-bottom:20px;}
   .resources h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
   .resources .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .resources .note-line{max-width:560px; margin:16px auto 44px; text-align:center; font-size:13.5px; color:rgba(38,36,29,0.72); font-family:'Fraunces',serif; font-style:italic;}
   .res-list{max-width:720px; margin:0 auto;}
   .res-item{display:flex; justify-content:space-between; align-items:baseline; padding:20px 0; border-bottom:1px solid var(--line); gap:20px;}
   .res-item h5{font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0 0 4px;}
@@ -156,12 +242,35 @@
   .cp-example{background:var(--cream-deep); border:1px dashed var(--line); padding:16px 18px; font-size:13.5px; font-family:'Fraunces',serif; font-style:italic; color:var(--ink);}
   .cp-note{font-size:12.5px; color:rgba(38,36,29,0.65); margin-top:12px;}
 
+  /* faq */
+  .faq-sec{padding:100px 0;}
+  .faq-sec .head{text-align:center; margin-bottom:46px;}
+  .faq-sec .head .script{display:block; font-size:18px; color:var(--green-deep); margin-bottom:6px;}
+  .faq-sec h2{font-size:clamp(28px,3.6vw,40px); text-transform:uppercase; color:var(--green-deep);}
+
+  /* final call to act */
+  .act-sec{background:var(--green); color:var(--cream); padding:100px 0 110px; text-align:center;}
+  .act-sec .script{font-size:18px; opacity:0.85; display:block; margin-bottom:10px;}
+  .act-sec h2{font-size:clamp(30px,5vw,50px); text-transform:uppercase; max-width:680px; margin:0 auto; line-height:1.05;}
+  .act-flow{max-width:520px; margin:44px auto 0; text-align:left;}
+  .act-step{display:none;}
+  .act-step.show{display:block; margin-bottom:18px;}
+  .act-step label{display:block; font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; color:rgba(246,241,230,0.8); margin-bottom:8px;}
+  .act-step textarea{width:100%; background:rgba(246,241,230,0.08); border:1px solid rgba(246,241,230,0.3); color:var(--cream); padding:12px 14px; font-family:'Inter',sans-serif; font-size:14px; border-radius:4px; resize:vertical;}
+  .act-step textarea::placeholder{color:rgba(246,241,230,0.4);}
+  .act-step textarea:disabled{opacity:0.6;}
+  .act-next{margin-top:12px; background:var(--pink); color:var(--green-deep); border:none; padding:10px 22px; border-radius:999px; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .act-done{display:none; text-align:center; margin-top:10px; font-family:'Fraunces',serif; font-style:italic; font-size:18px;}
+  .act-done.show{display:block;}
+  .act-privacy{font-size:11.5px; color:rgba(246,241,230,0.55); margin-top:30px;}
+
   .about{padding:100px 0 110px;}
   .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
   .about h2{font-size:clamp(26px,3.4vw,36px); text-transform:uppercase; line-height:1.12;}
   .about p{margin-top:18px; color:rgba(38,36,29,0.82); max-width:480px;}
   .about p + p{margin-top:12px;}
   .about-mark{font-family:'Fraunces',serif; font-style:italic; font-size:56px; color:var(--pink-deep); line-height:1;}
+  .about .sign{margin-top:22px; font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--green-deep);}
 
   footer{background:var(--green-deep); color:var(--cream); text-align:center; padding:44px 0 30px;}
   footer .foot-note{font-size:12px; letter-spacing:0.06em; opacity:0.6; margin-top:6px;}
@@ -171,16 +280,28 @@
     .intro-grid, .template-grid, .about-grid{grid-template-columns:1fr; gap:40px;}
     .paper-card{margin:0 auto;}
     .steps{grid-template-columns:1fr;}
-    .card-row, .flip-grid{grid-template-columns:1fr 1fr;}
+    .card-row, .flip-grid, .more-mistakes, .reason-row{grid-template-columns:1fr 1fr;}
     nav ul{display:none;}
   }
   @media (max-width:520px){
-    .card-row, .flip-grid{grid-template-columns:1fr;}
+    .card-row, .flip-grid, .more-mistakes, .reason-row{grid-template-columns:1fr;}
     .wrap{padding:0 20px;}
+    .activity-tabs, .cite-picker, .admissions-box{padding-left:20px; padding-right:20px;}
   }
 </style>
 </head>
 <body>
+
+<div class="bg-trail" aria-hidden="true">
+  <svg viewBox="0 0 1440 3200" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+    <path class="trail-path" d="M -100 60 C 250 220 60 480 380 560 C 700 640 560 960 900 1040 C 1240 1120 1040 1440 1360 1520 C 1680 1600 1440 1920 1760 2000 C 2080 2080 1820 2400 2140 2480" />
+    <path class="trail-path alt" d="M 1500 -50 C 1180 150 1300 420 980 520 C 660 620 780 900 460 1000 C 140 1100 300 1400 -40 1480 C -300 1540 -180 1820 -420 1900" />
+    <circle class="trail-dot" cx="380" cy="560" r="4.5"/>
+    <circle class="trail-dot" cx="900" cy="1040" r="4.5"/>
+    <circle class="trail-dot" cx="1360" cy="1520" r="4.5"/>
+    <circle class="trail-dot" cx="1760" cy="2000" r="4.5"/>
+  </svg>
+</div>
 
 <div class="scrollbar" id="scrollbar"></div>
 
@@ -189,11 +310,15 @@
     <div class="wordmark display">Paper Trail</div>
     <nav>
       <ul>
+        <li><a href="#why" data-nav>Why</a></li>
+        <li><a href="#start" data-nav>Start</a></li>
+        <li><a href="#explore" data-nav>Explore</a></li>
         <li><a href="#parts" data-nav>Parts</a></li>
         <li><a href="#framework" data-nav>Framework</a></li>
         <li><a href="#mistakes" data-nav>Mistakes</a></li>
         <li><a href="#template" data-nav>Template</a></li>
-        <li><a href="#resources" data-nav>Resources</a></li>
+        <li><a href="#resources" data-nav>Toolkit</a></li>
+        <li><a href="#faq" data-nav>FAQ</a></li>
         <li><a href="#about" data-nav>About</a></li>
       </ul>
     </nav>
@@ -206,13 +331,16 @@
   <div class="wrap">
     <span class="script">for the curious, the confused, and the first-time researcher</span>
     <h1>Write your first<br>real research paper</h1>
-    <p class="lede">A step-by-step field guide to picking a topic, researching it properly, building your index, and citing it right — for any subject, built by someone doing this for the first time herself.</p>
-    <div class="cta-row"><a class="btn" href="#parts">Start the guide</a></div>
+    <p class="lede">A step-by-step field guide to picking a topic, researching it properly, building your index, and citing it right, for any subject, built by someone doing this for the first time herself.</p>
+    <div class="cta-row">
+      <a class="btn" href="#start">You're not too young</a>
+      <a class="btn ghost" href="#explore">Find your question</a>
+    </div>
   </div>
 </section>
 
 <div class="marquee-band">
-  <div class="marquee-track">PAPER TRAIL &nbsp;·&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;·&nbsp; ONE TOPIC, DONE PROPERLY &nbsp;·&nbsp; PAPER TRAIL &nbsp;·&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;·&nbsp; ONE TOPIC, DONE PROPERLY &nbsp;·&nbsp;</div>
+  <div class="marquee-track">PAPER TRAIL &nbsp;&middot;&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;&middot;&nbsp; YOU ARE NEVER TOO YOUNG TO START &nbsp;&middot;&nbsp; PAPER TRAIL &nbsp;&middot;&nbsp; A FIELD GUIDE FOR FIRST-TIME RESEARCHERS &nbsp;&middot;&nbsp; YOU ARE NEVER TOO YOUNG TO START &nbsp;&middot;&nbsp;</div>
 </div>
 
 <section class="intro">
@@ -220,18 +348,166 @@
     <div>
       <span class="eyebrow">Why this exists</span>
       <h2>Nobody ever actually teaches you how to do this part.</h2>
-      <p>Research papers get assigned constantly, but rarely explained — how to pick a topic, find sources worth using, structure the thing, and cite it properly along the way.</p>
-      <p>This is that missing process. The exact sequence that turns "I have to write a research paper" into a finished one you're not embarrassed to hand in — no matter the subject.</p>
+      <p>Research papers get assigned constantly, but rarely explained: how to pick a topic, find sources worth using, structure the thing, and cite it properly along the way.</p>
+      <p>This is that missing process. The exact sequence that turns "I have to write a research paper" into a finished one you're not embarrassed to hand in, no matter the subject.</p>
     </div>
     <div class="paper-card">
       <span class="tag">What you'll build</span>
       <h4>Your Index</h4>
       <div class="idx-line"><span>Abstract</span><span>pg. 1</span></div>
       <div class="idx-line"><span>I. Introduction</span><span>pg. 2</span></div>
-      <div class="idx-line"><span>II. Body — Section One</span><span>pg. 3</span></div>
-      <div class="idx-line"><span>III. Body — Section Two</span><span>pg. 5</span></div>
+      <div class="idx-line"><span>II. Body, Section One</span><span>pg. 3</span></div>
+      <div class="idx-line"><span>III. Body, Section Two</span><span>pg. 5</span></div>
       <div class="idx-line"><span>IV. Conclusion</span><span>pg. 7</span></div>
       <div class="idx-line" style="border-bottom:none;"><span>References</span><span>pg. 8</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY RESEARCH MATTERS ============ -->
+<section class="why-sec" id="why">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">before the how, the why</span>
+      <h2>Why bother researching at all</h2>
+      <p>There is a difference between researching because a teacher assigned it, and researching because you actually want to know something. Paper Trail is built for the second kind, even if you happen to be doing the first kind too. Here is what you actually get out of it.</p>
+    </div>
+    <div class="acc-list" id="whyList">
+      <div class="acc-item"><div class="acc-q"><span>You get better at asking questions</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Most people stop at the first question that comes to mind. Research forces you to keep asking why until you hit something real.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You learn to think for yourself</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Instead of repeating what you heard somewhere, you start checking it against actual evidence before you believe it.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You learn to tell evidence from opinion</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>A claim and a fact are not the same thing. Research is where you learn to notice the difference, in other people's writing and in your own.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You learn whether a source deserves your trust</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Not everything written confidently is true. Learning to size up a source is one of the most useful skills you will ever build, in or out of school.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You learn to read something hard and get something out of it</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Dense writing stops feeling like a wall once you know what you're actually looking for in it.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You learn to build an argument, not just state an opinion</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>An argument holds up because it is backed by something. That is a different skill from simply having a view.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>You get comfortable not knowing yet</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Real research starts with a question you cannot answer. Sitting in that unknown, without rushing to a fake answer, is most of the work.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ YOU ARE NOT TOO YOUNG ============ -->
+<section class="start-sec" id="start">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">say it plainly</span>
+      <h2>You are not too young.</h2>
+      <p>Research does not begin when someone hands you a university ID. It begins the moment you ask a question and decide to actually look into it. That's the whole requirement.</p>
+    </div>
+    <div class="reason-row">
+      <div class="reason-card">
+        <span class="rnum">01</span>
+        <h4>You don't need permission to start</h4>
+        <p>No teacher has to assign it, no competition has to exist. Opening a document and writing down a real question is already a start.</p>
+      </div>
+      <div class="reason-card">
+        <span class="rnum">02</span>
+        <h4>Your first project doesn't need to be groundbreaking</h4>
+        <p>It needs to be honest. A small, well done question beats a huge, sloppy one every time.</p>
+      </div>
+      <div class="reason-card">
+        <span class="rnum">03</span>
+        <h4>Being inexperienced is not a reason to wait</h4>
+        <p>It's the reason to start now. You get better at research by doing research, badly at first, same as everything else worth learning.</p>
+      </div>
+    </div>
+    <div class="admissions-box">
+      <div class="acc-item" id="admissionsToggle"><div class="acc-q"><span>What about college admissions?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Research can genuinely help your academic profile, but not because the word "research" appears on an application. What matters is what you actually did: the curiosity, the persistence, the thinking. Do it because you want to understand something. If it happens to help later, good. If you never put it on an application, it was still worth doing.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIND YOUR OWN QUESTION ============ -->
+<section class="explore-sec" id="explore">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">before you have a topic, you have a feeling</span>
+      <h2>Find your own question</h2>
+      <p>Paper Trail will not hand you a list of topics to copy. Good research starts with something you already noticed, disagreed with, or couldn't explain. Click through the actual sequence that turns that noticing into a real question.</p>
+    </div>
+
+    <div class="trail-stages" id="trailStages">
+      <button class="trail-btn active" data-stage="notice">Notice</button>
+      <button class="trail-btn" data-stage="wonder">Wonder</button>
+      <button class="trail-btn" data-stage="question">Question</button>
+      <button class="trail-btn" data-stage="evidence">Evidence</button>
+      <button class="trail-btn" data-stage="investigate">Investigate</button>
+    </div>
+    <div class="trail-panel">
+      <div class="tp-line" id="tpLine">"I noticed something."</div>
+      <p id="tpText">Maybe a pattern, a disagreement, something that didn't add up. Every real project starts here, not with a topic, with a feeling that something is worth a closer look.</p>
+    </div>
+
+    <div class="subhead">Try it yourself</div>
+    <div class="activity-tabs">
+      <div class="act-tab-btns" id="actTabBtns">
+        <button class="active" data-tab="tabOp">Opinion or evidence?</button>
+        <button data-tab="tabBr">Too broad?</button>
+        <button data-tab="tabEval">Evaluate a source</button>
+        <button data-tab="tabRead">Read smart</button>
+      </div>
+
+      <div class="act-panel tab-active" id="tabOp">
+        <p class="tab-intro">Is this statement something you could look up and check, or just something someone believes?</p>
+        <div class="quiz-card">
+          <div class="qtext" id="opQ"></div>
+          <div class="quiz-btns" id="opBtns">
+            <button data-val="opinion">Opinion</button>
+            <button data-val="evidence">Evidence</button>
+          </div>
+          <div class="quiz-feedback" id="opF"></div>
+          <button class="quiz-next" id="opNext">Next example</button>
+        </div>
+      </div>
+
+      <div class="act-panel" id="tabBr">
+        <p class="tab-intro">Is this something you could actually investigate, or is it still just a subject?</p>
+        <div class="quiz-card">
+          <div class="qtext" id="brQ"></div>
+          <div class="quiz-btns" id="brBtns">
+            <button data-val="broad">Too broad</button>
+            <button data-val="researchable">Researchable</button>
+          </div>
+          <div class="quiz-feedback" id="brF"></div>
+          <button class="quiz-next" id="brNext">Next example</button>
+        </div>
+      </div>
+
+      <div class="act-panel" id="tabEval">
+        <p class="tab-intro">Before you cite anything, run it through these five questions.</p>
+        <div class="acc-list">
+          <div class="acc-item"><div class="acc-q"><span>Who created it?</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>A named author or organization is a good sign. No name and no way to check credibility is a reason to be cautious.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>When was it published?</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>For fast-moving topics, an old source can be outdated even if it was solid when it was written.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>What evidence does it give?</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>Look for data, citations, or named sources. A confident tone is not the same thing as backing.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>Does it have a clear purpose?</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>Is it trying to inform you, sell you something, or persuade you of something? That purpose shapes what it leaves out.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>Can its claims be verified?</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>Can you find the same fact somewhere else, independently? If a claim only exists in one place, treat it carefully.</p></div></div>
+        </div>
+      </div>
+
+      <div class="act-panel" id="tabRead">
+        <p class="tab-intro">You don't need to read a source start to finish. Ask: what is it claiming, what evidence backs it, what are its limits, and can you trust it.</p>
+        <div class="acc-list">
+          <div class="acc-item"><div class="acc-q"><span>Start with the title and abstract</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>That's the whole argument compressed into a few lines. If you can't restate it in your own words, you're not ready to read the rest yet.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>Skim the introduction for the question</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>You're looking for what they were actually trying to find out, not every sentence.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>Jump to the discussion before the middle</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>The methods and raw results make more sense once you already know what the source claims to have found.</p></div></div>
+          <div class="acc-item"><div class="acc-q"><span>Check the references, not just the text</span><span class="plus">+</span></div>
+            <div class="acc-a"><p>A source's own citations often lead you to better material than the source itself.</p></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -246,11 +522,11 @@
     <div class="flip-grid" id="flipGrid">
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">01</span><h4>Title</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">Short and specific enough that someone could guess your argument just from reading it — not just your general subject.</div>
+        <div class="flip-back">Short and specific enough that someone could guess your argument just from reading it, not just your general subject.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">02</span><h4>Abstract</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">A 150–250 word summary of the whole paper — your question, how you looked into it, what you found. Written last, read first.</div>
+        <div class="flip-back">A 150 to 250 word summary of the whole paper: your question, how you looked into it, what you found. Written last, read first.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">03</span><h4>Introduction</h4><span class="tap">Tap to flip</span></div>
@@ -258,23 +534,23 @@
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">04</span><h4>Literature Review</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">What others have already said about your topic — not a list of sources, but a short story of the existing conversation.</div>
+        <div class="flip-back">What others have already said about your topic, not a list of sources, but a short story of the existing conversation.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">05</span><h4>Methodology</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">Simply: how you looked into your question. Which sources, and what kind of research — reading and comparing, or something more hands-on.</div>
+        <div class="flip-back">Simply: how you looked into your question. Which sources, and what kind of research, reading and comparing, or something more hands-on.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">06</span><h4>Body / Results</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">What you actually found, laid out clearly — facts and evidence first, your opinion saved for the next part.</div>
+        <div class="flip-back">What you actually found, laid out clearly: facts and evidence first, your opinion saved for the next part.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">07</span><h4>Conclusion</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">What it all means, stated plainly — no new information here, just your honest answer to the question you started with.</div>
+        <div class="flip-back">What it all means, stated plainly: no new information here, just your honest answer to the question you started with.</div>
       </div></div>
       <div class="flip-card"><div class="flip-inner">
         <div class="flip-front"><span class="fnum">08</span><h4>References</h4><span class="tap">Tap to flip</span></div>
-        <div class="flip-back">Every source you used, listed in one consistent citation style — this is what keeps your paper honest and traceable.</div>
+        <div class="flip-back">Every source you used, listed in one consistent citation style: this is what keeps your paper honest and traceable.</div>
       </div></div>
     </div>
   </div>
@@ -294,9 +570,9 @@
       <div class="step" data-step="1"><div class="step-top"><span class="num">01</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
         <h3>Pick a topic you actually care about</h3><p>Not the first suggestion off a Google search. If you're not a little curious about it, the next three weeks will feel twice as long.</p></div>
       <div class="step" data-step="2"><div class="step-top"><span class="num">02</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
-        <h3>Turn it into one real question</h3><p>A topic is not a thesis. "Climate change" isn't a paper — "why did this policy fail to reduce emissions" is.</p></div>
+        <h3>Turn it into one real question</h3><p>A topic is not a thesis. "Climate change" isn't a paper: "why did this policy fail to reduce emissions" is.</p></div>
       <div class="step" data-step="3"><div class="step-top"><span class="num">03</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
-        <h3>Find real sources, not just top results</h3><p>Google Scholar, your library's databases, and JSTOR exist for a reason — the first page of a normal search is rarely where the good sources live.</p></div>
+        <h3>Find real sources, not just top results</h3><p>Google Scholar, your library's databases, and JSTOR exist for a reason: the first page of a normal search is rarely where the good sources live.</p></div>
       <div class="step" data-step="4"><div class="step-top"><span class="num">04</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
         <h3>Take notes by section, not by source</h3><p>Organize what you find under the parts of your outline as you go. Writing becomes assembly instead of a second research phase.</p></div>
       <div class="step" data-step="5"><div class="step-top"><span class="num">05</span><div class="step-check"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="#153327" stroke-width="2" stroke-linecap="round"/></svg></div></div>
@@ -313,11 +589,12 @@
   <div class="wrap">
     <div class="head">
       <span class="script">read this before you start writing</span>
-      <h2>Four ways first papers go wrong</h2>
+      <h2>Ways first papers go wrong</h2>
       <div class="hint">Tap a card to see the fix.</div>
     </div>
+    <div class="lead-note">Your first attempt will probably be a little messy, and that's normal. You might pick a question that's too broad, find a source that turns out to be weak, or realize halfway through that your original assumption was wrong. A good researcher isn't someone who gets it right immediately, it's someone who notices the problem and adjusts.</div>
     <div class="card-row" id="mcardRow">
-      <div class="mcard" data-fix="Use Wikipedia to find its cited sources at the bottom of the page — then go read and cite those instead.">
+      <div class="mcard" data-fix="Use Wikipedia to find its cited sources at the bottom of the page, then go read and cite those instead.">
         <span class="x">01</span><h4>Stopping at Wikipedia</h4><p>Fine as a map to find real sources. Never fine as the only source you cite.</p>
         <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
       <div class="mcard" data-fix="Write your index first, even a rough one. Filling in labeled boxes is easier than facing one blank page.">
@@ -330,6 +607,21 @@
         <span class="x">04</span><h4>Topic mistaken for a thesis</h4><p>"Social media and teenagers" is a subject. It isn't an argument yet, and a paper needs one.</p>
         <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
     </div>
+    <div class="more-mistakes" id="moreMistakes">
+      <div class="mcard" data-fix="Write it in plain language first. Dress it up only if you need to. A clear sentence beats an impressive-sounding vague one.">
+        <span class="x">05</span><h4>Trying to sound academic instead of clear</h4><p>Piling on complicated words doesn't make an argument stronger, it usually just hides that it isn't finished yet.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="Every claim should be traceable to something you found. If you can't point to where it came from, it isn't ready to go in the paper yet.">
+        <span class="x">06</span><h4>Making claims without evidence</h4><p>A sentence that sounds true is not the same as a sentence that's been checked.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="Fewer sources, actually understood, beat a long list you skimmed. Read less, read closer.">
+        <span class="x">07</span><h4>Piling on sources you don't understand</h4><p>A long reference list looks impressive. It doesn't mean much if you can't explain what any of them actually argue.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+      <div class="mcard" data-fix="A serious, honest investigation is worth doing even if nobody outside your laptop ever reads it. Publishing is one possible next step, not the point of the whole thing.">
+        <span class="x">08</span><h4>Treating publication as the only success</h4><p>Waiting to feel like your work "counts" until it's published is a good way to never finish it.</p>
+        <div class="fix"><div class="fix-inner"><b>The fix:</b> <span class="fix-text"></span></div></div><span class="toggle-hint">See the fix</span></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn">Show four more mistakes</button>
   </div>
 </section>
 
@@ -338,7 +630,7 @@
     <div>
       <span class="eyebrow">Build it here</span>
       <h2>Fill in your index, section by section.</h2>
-      <p>Type a few words in each box — your actual topic, sources, and argument. Nothing is saved anywhere; it only lives in this page until you copy it out.</p>
+      <p>Type a few words in each box, your actual topic, sources, and argument. Nothing is saved anywhere, it only lives in this page until you copy it out.</p>
     </div>
     <div class="checklist">
       <div class="cl-item"><div class="row-top"><span class="n">01</span><div style="flex:1;"><h5>Title & research question</h5><p>Your topic, phrased as the one question your paper will answer.</p></div></div>
@@ -347,11 +639,11 @@
         <textarea id="f2" placeholder="Summarize the whole paper in a few sentences."></textarea></div>
       <div class="cl-item"><div class="row-top"><span class="n">03</span><div style="flex:1;"><h5>Introduction</h5><p>The question, and why it matters, and where the paper is headed.</p></div></div>
         <textarea id="f3" placeholder="What you're arguing, and why it matters."></textarea></div>
-      <div class="cl-item"><div class="row-top"><span class="n">04</span><div style="flex:1;"><h5>Body sections</h5><p>List your 2–3 sub-topics — each becomes one section.</p></div></div>
+      <div class="cl-item"><div class="row-top"><span class="n">04</span><div style="flex:1;"><h5>Body sections</h5><p>List your 2 to 3 sub-topics, each becomes one section.</p></div></div>
         <textarea id="f4" placeholder="Section 1: ...&#10;Section 2: ...&#10;Section 3: ..."></textarea></div>
       <div class="cl-item"><div class="row-top"><span class="n">05</span><div style="flex:1;"><h5>Conclusion</h5><p>What you found, in one honest sentence.</p></div></div>
         <textarea id="f5" placeholder="What your research actually showed."></textarea></div>
-      <div class="cl-item"><div class="row-top"><span class="n">06</span><div style="flex:1;"><h5>References (running list)</h5><p>Add a source the moment you use it — don't wait.</p></div></div>
+      <div class="cl-item"><div class="row-top"><span class="n">06</span><div style="flex:1;"><h5>References (running list)</h5><p>Add a source the moment you use it, don't wait.</p></div></div>
         <textarea id="f6" placeholder="Author, Title, Publication, Year..."></textarea></div>
       <div class="copy-row"><button class="copy-btn" onclick="copyTemplate()">Copy my outline</button><span class="copy-note" id="copyNote"></span></div>
     </div>
@@ -364,6 +656,7 @@
       <span class="script">where to actually look</span>
       <h2>Free places to start</h2>
     </div>
+    <div class="note-line">Publishing is one possible destination for research, not the definition of whether it was worth doing. Plenty of good research just lives in a document you're proud of.</div>
 
     <div class="cite-picker">
       <div class="cp-label">Which citation style fits your paper?</div>
@@ -373,15 +666,81 @@
         <button class="cp-btn" data-style="chicago">Chicago</button>
       </div>
       <div class="cp-example" id="cpExample">Smith, J. (2024). Title of the source. Publisher.</div>
-      <div class="cp-note" id="cpNote">Most common in social sciences and psychology — used for in-text citations like (Smith, 2024).</div>
+      <div class="cp-note" id="cpNote">Most common in social sciences and psychology, used for in-text citations like (Smith, 2024).</div>
     </div>
 
     <div class="res-list">
-      <div class="res-item"><div><h5>Google Scholar</h5><p>Free search engine for academic papers, articles, and citations — a real step up from a normal search.</p></div><span class="tag2">Sources</span></div>
-      <div class="res-item"><div><h5>Purdue OWL</h5><p>Free, the standard reference for MLA and APA citation formatting — when in doubt, this settles it.</p></div><span class="tag2">Formatting</span></div>
-      <div class="res-item"><div><h5>Your school or local library's databases</h5><p>Often free access to JSTOR or EBSCO through your student login — ask a librarian if you're not sure.</p></div><span class="tag2">Sources</span></div>
+      <div class="res-item"><div><h5>Google Scholar</h5><p>Free search engine for academic papers, articles, and citations: a real step up from a normal search.</p></div><span class="tag2">Sources</span></div>
+      <div class="res-item"><div><h5>Purdue OWL</h5><p>Free, the standard reference for MLA and APA citation formatting: when in doubt, this settles it.</p></div><span class="tag2">Formatting</span></div>
+      <div class="res-item"><div><h5>Your school or local library's databases</h5><p>Often free access to JSTOR or EBSCO through your student login, ask a librarian if you're not sure.</p></div><span class="tag2">Sources</span></div>
       <div class="res-item"><div><h5>Zotero</h5><p>Free tool that collects sources as you browse and formats your citations automatically.</p></div><span class="tag2">Citations</span></div>
+      <div class="res-item"><div><h5>A simple two-column note system</h5><p>One column for the fact, one for exactly where it came from. Boring, and it's the single habit that prevents accidental plagiarism.</p></div><span class="tag2">Notes</span></div>
+      <div class="res-item"><div><h5>A one-page planner</h5><p>Write your question, your 2 to 3 sub-questions, and a rough deadline on one page before you start. It keeps you honest about scope.</p></div><span class="tag2">Plan</span></div>
     </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq-sec" id="faq">
+  <div class="wrap">
+    <div class="head">
+      <span class="script">the questions people actually have</span>
+      <h2>FAQ</h2>
+    </div>
+    <div class="acc-list">
+      <div class="acc-item"><div class="acc-q"><span>Am I too young to do research?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>No. Research starts with a real question and the willingness to look into it properly, not with an age or a title.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Do I need a mentor?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>No, though it can help. Plenty of solid first projects happen with a search engine, a library login, and patience.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Do I need to publish my research?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>No. Publication is one possible destination for research, not the definition of whether it was worth doing.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Do I need to be good at science?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>No. Research spans history, literature, economics, sociology, art, and plenty of subjects that have nothing to do with a lab.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Can I research something outside my school subjects?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Yes. Some of the best first projects come from something a student noticed in daily life, not from a class at all.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>What if I don't know what I want to research?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Start smaller than a topic. Start with one thing you keep noticing or disagreeing with, and follow that.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>What if my first question is bad?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>Most first questions are too broad or too vague. That's normal, you narrow it as you go, not before you start.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>How long should research take?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>It depends entirely on scope, but a serious first project usually takes weeks, not a weekend. Give it room.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Does research actually help with university applications?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>It can, but only because of what it shows about how you think, not because of the word "research" itself.</p></div></div>
+      <div class="acc-item"><div class="acc-q"><span>Do I need expensive software?</span><span class="plus">+</span></div>
+        <div class="acc-a"><p>No. A document, a browser, a library login, and a free tool like Zotero cover almost everything you need.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL PUSH TO ACT ============ -->
+<section class="act-sec" id="act">
+  <div class="wrap">
+    <span class="script">last thing</span>
+    <h2>You don't need a perfect question.<br>You need a question worth following.</h2>
+    <div class="act-flow">
+      <div class="act-step show" id="actStep1">
+        <label>What is something you've been wondering about?</label>
+        <textarea id="a1" rows="2" placeholder="Type it here. Nobody sees this but you, it isn't saved anywhere."></textarea>
+        <button class="act-next" data-next="actStep2">Continue</button>
+      </div>
+      <div class="act-step" id="actStep2">
+        <label>Good. Now ask why.</label>
+        <textarea id="a2" rows="2" placeholder="Why does this happen, or why does it matter to you?"></textarea>
+        <button class="act-next" data-next="actStep3">Continue</button>
+      </div>
+      <div class="act-step" id="actStep3">
+        <label>What would you need to find out to actually answer that?</label>
+        <textarea id="a3" rows="2" placeholder="What information, data, or sources would settle this?"></textarea>
+        <button class="act-next" data-next="actStep4">Continue</button>
+      </div>
+      <div class="act-step" id="actStep4">
+        <label>What kind of evidence could help you answer it?</label>
+        <textarea id="a4" rows="2" placeholder="Studies, data, interviews, primary sources..."></textarea>
+        <button class="act-next" data-next="actDone">Continue</button>
+      </div>
+      <div class="act-done" id="actDone">That's a real start. Go follow it.</div>
+    </div>
+    <div class="act-privacy">Nothing you type here is saved or sent anywhere. It only exists on this page, right now.</div>
   </div>
 </section>
 
@@ -390,10 +749,16 @@
     <div class="about-mark">"</div>
     <div>
       <span class="eyebrow">About this guide</span>
-      <h2>Written by someone figuring this out for the first time too</h2>
-      <p>I'm Bhavya, a high schooler. Nobody assigned me a research paper — I just got curious one day and wanted to write a proper one, on my own terms.</p>
-      <p>The problem was I had no idea where to start. I opened a blank doc, read the word "abstract," closed it, and left the whole thing alone for months because it all sounded like a language for people who already knew what they were doing.</p>
-      <p>This guide is the process I eventually figured out for myself, written down so the next curious person doesn't lose months to the same confusion.</p>
+      <h2>Hi, I'm Bhavya.</h2>
+      <p>I used to think research was something you did later , maybe in university, with professors, complicated papers, and years of experience behind you.</p>
+      <p>Then I realized that's not true. <strong>You're never too young.</strong></p>
+      <p>Paper Trail started from that idea.</p>
+      <p>I wanted to make something that would help students like me take that first step ,not by giving them topics to copy or telling them what they <em>should</em> be interested in, but by showing them how to take an idea they're genuinely curious about and turn it into real research.</p>
+      <p>I also believe research is about much more than building a college application. It's one of the best ways to learn how to think independently, question information, find evidence, and actually understand something instead of just memorizing it.</p>
+      <p>So if you're a student like me who has ever thought, <em>"I'd love to try research, but I have no idea where to start,"</em>  that's exactly why I made Paper Trail!</p>
+      <p>You don't need to wait until university.</p>
+      <p><strong>Start with a question. I'll help you find the trail.</strong></p>
+      <div class="sign">Bhavya</div>
     </div>
   </div>
 </section>
@@ -403,7 +768,7 @@
 <footer>
   <div class="wrap">
     <div class="signed">By Bhavya Tiwari</div>
-    <div class="foot-note">Paper Trail — a field guide for first-time researchers</div>
+    <div class="foot-note">Paper Trail: a field guide for first-time researchers</div>
   </div>
 </footer>
 
@@ -413,6 +778,13 @@ window.addEventListener('scroll', () => {
   const h = document.documentElement;
   const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
   document.getElementById('scrollbar').style.width = pct + '%';
+});
+
+// Generic accordion (why, admissions, explore tabs, faq)
+document.querySelectorAll('.acc-item').forEach(item => {
+  item.querySelector('.acc-q').addEventListener('click', () => {
+    item.classList.toggle('open');
+  });
 });
 
 // Step checkboxes + progress bar
@@ -435,6 +807,14 @@ document.querySelectorAll('.mcard').forEach(card => {
   });
 });
 
+// Show more mistakes
+const showMoreBtn = document.getElementById('showMoreBtn');
+const moreMistakes = document.getElementById('moreMistakes');
+showMoreBtn.addEventListener('click', () => {
+  const show = moreMistakes.classList.toggle('show');
+  showMoreBtn.textContent = show ? 'Show fewer mistakes' : 'Show four more mistakes';
+});
+
 // Flip cards
 document.querySelectorAll('.flip-card').forEach(card => {
   card.addEventListener('click', () => card.classList.toggle('flipped'));
@@ -442,9 +822,9 @@ document.querySelectorAll('.flip-card').forEach(card => {
 
 // Citation style picker
 const cpData = {
-  apa: { example: "Smith, J. (2024). Title of the source. Publisher.", note: "Most common in social sciences and psychology — used for in-text citations like (Smith, 2024)." },
-  mla: { example: 'Smith, John. "Title of the Source." Publisher, 2024.', note: "Most common in humanities and literature — used for in-text citations like (Smith 45)." },
-  chicago: { example: "Smith, John. Title of the Source. City: Publisher, 2024.", note: "Common in history and some sciences — offers footnote-style or author-date citations depending on your teacher's preference." }
+  apa: { example: "Smith, J. (2024). Title of the source. Publisher.", note: "Most common in social sciences and psychology, used for in-text citations like (Smith, 2024)." },
+  mla: { example: 'Smith, John. "Title of the Source." Publisher, 2024.', note: "Most common in humanities and literature, used for in-text citations like (Smith 45)." },
+  chicago: { example: "Smith, John. Title of the Source. City: Publisher, 2024.", note: "Common in history and some sciences, offers footnote-style or author-date citations depending on your teacher's preference." }
 };
 document.querySelectorAll('.cp-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -469,15 +849,100 @@ function copyTemplate(){
   ];
   const text = parts.join("\n");
   navigator.clipboard.writeText(text).then(() => {
-    document.getElementById('copyNote').textContent = "Copied — paste it into your doc.";
+    document.getElementById('copyNote').textContent = "Copied, paste it into your doc.";
   }).catch(() => {
-    document.getElementById('copyNote').textContent = "Couldn't copy automatically — select the boxes manually.";
+    document.getElementById('copyNote').textContent = "Couldn't copy automatically, select the boxes manually.";
   });
 }
 
+// Trail stage clicker (Find your own question)
+const trailData = {
+  notice: { line: '"I noticed something."', text: "Maybe a pattern, a disagreement, something that didn't add up. Every real project starts here, not with a topic, with a feeling that something is worth a closer look." },
+  wonder: { line: '"I started wondering why."', text: "Curiosity on its own isn't research yet. But it's the raw material. Let yourself sit with the wondering instead of rushing past it." },
+  question: { line: '"I asked a more specific question."', text: '"Why do people disagree about this" is a start. "Why did this specific policy fail to do what it promised" is a question you can actually investigate.' },
+  evidence: { line: '"I realized I needed evidence."', text: "A question is not an opinion. At some point you notice you can't answer it from memory, and that's exactly when research begins." },
+  investigate: { line: '"I began investigating."', text: "Now you're doing it: reading, comparing, taking notes, changing your mind when the evidence tells you to." }
+};
+document.querySelectorAll('.trail-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.trail-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = trailData[btn.getAttribute('data-stage')];
+    document.getElementById('tpLine').textContent = d.line;
+    document.getElementById('tpText').textContent = d.text;
+  });
+});
+
+// Mini-activity tabs
+document.querySelectorAll('.act-tab-btns button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.act-tab-btns button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.act-panel').forEach(p => p.classList.remove('tab-active'));
+    document.getElementById(btn.getAttribute('data-tab')).classList.add('tab-active');
+  });
+});
+
+// Opinion vs Evidence quiz
+const opinionData = [
+  { text: '"This policy clearly failed, and everyone knows it."', answer: 'opinion', explain: "No numbers, no source, just a claim stated with confidence." },
+  { text: '"Regional unemployment rose by 4 percent in the two years after the policy took effect."', answer: 'evidence', explain: "A specific, checkable number from data or a source." },
+  { text: '"Social media is obviously bad for teenagers."', answer: 'opinion', explain: "Widely believed is not the same as demonstrated." },
+  { text: '"A 2023 survey of 1,200 teenagers found a correlation between daily screen time over 5 hours and reported sleep loss."', answer: 'evidence', explain: "A specific study with specific numbers, something you could go look up." }
+];
+const broadData = [
+  { text: '"Climate change"', answer: 'broad', explain: "This is a subject, not a question. You could write a hundred different papers under this title." },
+  { text: '"Why did coral bleaching accelerate on this specific reef between 2015 and 2020?"', answer: 'researchable', explain: "Specific place, specific timeframe, one clear question." },
+  { text: '"Social media and teenagers"', answer: 'broad', explain: "Two nouns next to each other is not a question yet." },
+  { text: '"Does daily use of a specific app correlate with shorter reported sleep in students aged 14 to 17?"', answer: 'researchable', explain: "Specific population, specific variable, something you could actually test against evidence." }
+];
+
+function setupQuiz(prefix, data){
+  let idx = 0;
+  const qEl = document.getElementById(prefix + 'Q');
+  const fEl = document.getElementById(prefix + 'F');
+  const nextBtn = document.getElementById(prefix + 'Next');
+  const btns = document.querySelectorAll('#' + prefix + 'Btns button');
+  function render(){
+    qEl.textContent = data[idx].text;
+    fEl.textContent = '';
+    btns.forEach(b => b.classList.remove('correct','wrong'));
+    nextBtn.style.display = 'none';
+  }
+  btns.forEach(b => {
+    b.addEventListener('click', () => {
+      const val = b.getAttribute('data-val');
+      btns.forEach(x => x.classList.remove('correct','wrong'));
+      if(val === data[idx].answer){ b.classList.add('correct'); }
+      else {
+        b.classList.add('wrong');
+        btns.forEach(x => { if(x.getAttribute('data-val') === data[idx].answer) x.classList.add('correct'); });
+      }
+      fEl.textContent = data[idx].explain;
+      nextBtn.style.display = 'inline-block';
+    });
+  });
+  nextBtn.addEventListener('click', () => { idx = (idx + 1) % data.length; render(); });
+  render();
+}
+setupQuiz('op', opinionData);
+setupQuiz('br', broadData);
+
+// Final "start now" reflective flow
+document.querySelectorAll('.act-next').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nextId = btn.getAttribute('data-next');
+    document.getElementById(nextId).classList.add('show');
+    const step = btn.closest('.act-step');
+    step.querySelector('textarea').setAttribute('disabled', 'true');
+    btn.style.display = 'none';
+  });
+});
+
 // Scroll-spy nav
 const navLinks = document.querySelectorAll('[data-nav]');
-const sections = ['parts','framework','mistakes','template','resources','about'].map(id => document.getElementById(id));
+const sectionIds = ['why','start','explore','parts','framework','mistakes','template','resources','faq','act','about'];
+const sections = sectionIds.map(id => document.getElementById(id));
 const spy = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
